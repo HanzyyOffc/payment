@@ -121,6 +121,25 @@
       to { opacity: 1; }
     }
 
+    /* Download button */
+    .download-btn {
+      display: inline-block;
+      margin-top: 10px;
+      background: transparent;
+      color: var(--accent);
+      font-weight: 600;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 8px 16px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
     /* Loading */
     #loading {
       position: fixed;
@@ -170,11 +189,12 @@
 
   <!-- Main Card -->
   <div class="card" style="display:none" id="mainCard">
-    <img src="https://seeklogo.com/images/D/dana-logo-1ED915E697-seeklogo.com.png" alt="Dana Logo" class="logo" />
+    <img src="https://files.catbox.moe/9rr2y2.jpg" alt="Dana Logo" class="logo" />
     <h2>Pembayaran via DANA</h2>
 
     <div class="qr-container">
       <img src="https://files.catbox.moe/t6tm59.jpg" alt="QR Qris" />
+      <a href="https://files.catbox.moe/t6tm59.jpg" download="qris-dana.png" class="download-btn">⬇️ Download QRIS</a>
     </div>
 
     <div class="dana-number" id="danaNomor">082264176976</div>
