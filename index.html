@@ -3,109 +3,190 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pembayaran QRIS & Dana</title>
-  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+  <title>Pembayaran via Dana</title>
   <style>
-    body {
-      background: linear-gradient(to bottom right, #e0f7fa, #e1f5fe);
-      font-family: 'Segoe UI', sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    * {
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: background 0.5s ease, color 0.5s ease;
     }
 
-    .payment-container {
-      background: #fff;
-      padding: 30px;
+    :root {
+      --bg: #f4f4f4;
+      --text: #222;
+      --card-bg: #fff;
+      --accent: #007bff;
+      --accent-dark: #0056b3;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --text: #e2e8f0;
+        --card-bg: #1e293b;
+        --accent: #00c3ff;
+        --accent-dark: #0092cc;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      padding: 2rem;
       max-width: 400px;
-      width: 90%;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeSlide 0.8s ease;
     }
 
-    .payment-container h2 {
-      font-size: 24px;
-      margin-bottom: 25px;
-      color: #0066cc;
+    .card img.logo {
+      width: 120px;
+      margin-bottom: 1rem;
     }
 
-    .qris, .dana {
-      margin-bottom: 30px;
-    }
-
-    .qr-code {
+    .qr-container img {
       width: 200px;
       height: 200px;
-      object-fit: cover;
       border-radius: 12px;
-      border: 3px solid #00a8e8;
-    }
-
-    h3 {
-      margin: 10px 0;
-      color: #0077c2;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
     }
 
     .dana-number {
-      font-size: 20px;
-      font-weight: bold;
-      color: #1e88e5;
-      margin: 10px 0;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      background: rgba(0,0,0,0.05);
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: inline-block;
+      color: var(--text);
+    }
+
+    .note {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-top: 15px;
     }
 
     .copy-btn {
-      background: linear-gradient(to right, #00bcd4, #2196f3);
+      margin-top: 15px;
+      padding: 10px 18px;
+      background: var(--accent);
       color: white;
+      font-weight: 600;
       border: none;
-      padding: 10px 20px;
-      font-size: 15px;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: background 0.3s ease;
     }
 
     .copy-btn:hover {
-      background: linear-gradient(to right, #2196f3, #00bcd4);
-      transform: scale(1.05);
+      background: var(--accent-dark);
     }
 
-    .success-msg {
-      display: none;
+    .alert {
       margin-top: 10px;
-      color: green;
-      font-size: 14px;
+      font-size: 0.9rem;
+      color: limegreen;
+      display: none;
+      animation: fadeIn 0.4s ease;
     }
+
+    @keyframes fadeSlide {
+      0% {opacity: 0; transform: translateY(20px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Loading */
+    #loading {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid var(--accent);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="payment-container">
-    <h2>Pembayaran QRIS & Dana</h2>
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
 
-    <div class="qris">
-      <h3>Scan QRIS</h3>
-      <img src="https://files.catbox.moe/t6tm59.jpg" alt="QRIS Code" class="qr-code" />
+  <!-- Main Card -->
+  <div class="card" style="display:none" id="mainCard">
+    <img src="https://seeklogo.com/images/D/dana-logo-1ED915E697-seeklogo.com.png" alt="Dana Logo" class="logo" />
+    <h2>Pembayaran via DANA</h2>
+
+    <div class="qr-container">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=085712345678&size=200x200" alt="QR Dana" />
     </div>
 
-    <div class="dana">
-      <h3>Transfer ke Dana</h3>
-      <p class="dana-number" id="danaNumber">0877-1748-2670</p>
-      <button onclick="salinDana()" class="copy-btn">Salin Nomor Dana</button>
-      <div class="success-msg" id="successMsg">✅ Nomor berhasil disalin!</div>
-    </div>
+    <div class="dana-number" id="danaNomor">0857 1234 5678</div>
+    <button class="copy-btn" onclick="copyDana()">📋 Salin Nomor</button>
+    <div class="alert" id="copyAlert">Nomor berhasil disalin!</div>
+
+    <div class="note">Silakan scan QR atau salin nomor untuk transfer</div>
   </div>
 
   <script>
-    function salinDana() {
-      const nomor = document.getElementById("danaNumber").innerText.replace(/-/g, "");
+    // Loading screen timeout
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('mainCard').style.display = 'block';
+      }, 1500);
+    });
+
+    // Copy function
+    function copyDana() {
+      const nomor = document.getElementById("danaNomor").innerText.replace(/\s/g, '');
       navigator.clipboard.writeText(nomor).then(() => {
-        const msg = document.getElementById("successMsg");
-        msg.style.display = "block";
-        setTimeout(() => msg.style.display = "none", 2000);
+        const alert = document.getElementById("copyAlert");
+        alert.style.display = "block";
+        setTimeout(() => {
+          alert.style.display = "none";
+        }, 2000);
       });
     }
   </script>
