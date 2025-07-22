@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembayaran QRIS & Dana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #e0f7fa, #e1f5fe);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .payment-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .payment-container h2 {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #0066cc;
+    }
+
+    .qris, .dana {
+      margin-bottom: 30px;
+    }
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 3px solid #00a8e8;
+    }
+
+    h3 {
+      margin: 10px 0;
+      color: #0077c2;
+    }
+
+    .dana-number {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1e88e5;
+      margin: 10px 0;
+    }
+
+    .copy-btn {
+      background: linear-gradient(to right, #00bcd4, #2196f3);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(to right, #2196f3, #00bcd4);
+      transform: scale(1.05);
+    }
+
+    .success-msg {
+      display: none;
+      margin-top: 10px;
+      color: green;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="payment-container">
+    <h2>Pembayaran QRIS & Dana</h2>
+
+    <div class="qris">
+      <h3>Scan QRIS</h3>
+      <img src="https://files.catbox.moe/t6tm59.jpg" alt="QRIS Code" class="qr-code" />
+    </div>
+
+    <div class="dana">
+      <h3>Transfer ke Dana</h3>
+      <p class="dana-number" id="danaNumber">0877-1748-2670</p>
+      <button onclick="salinDana()" class="copy-btn">Salin Nomor Dana</button>
+      <div class="success-msg" id="successMsg">✅ Nomor berhasil disalin!</div>
+    </div>
+  </div>
+
+  <script>
+    function salinDana() {
+      const nomor = document.getElementById("danaNumber").innerText.replace(/-/g, "");
+      navigator.clipboard.writeText(nomor).then(() => {
+        const msg = document.getElementById("successMsg");
+        msg.style.display = "block";
+        setTimeout(() => msg.style.display = "none", 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
