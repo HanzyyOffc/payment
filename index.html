@@ -22,6 +22,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow: hidden;
       transition: background 0.5s ease, color 0.5s ease;
     }
 
@@ -52,6 +53,8 @@
       text-align: center;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       animation: fadeSlide 0.8s ease;
+      position: relative;
+      z-index: 10;
     }
 
     .card img.logo {
@@ -128,7 +131,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      z-index: 999;
     }
 
     .spinner {
@@ -144,9 +147,21 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Particle Background */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
 
   <!-- Loading -->
   <div id="loading">
@@ -159,18 +174,20 @@
     <h2>Pembayaran via DANA</h2>
 
     <div class="qr-container">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?data=085712345678&size=200x200" alt="QR Dana" />
+      <img src="https://files.catbox.moe/t6tm59.jpg" alt="QR Qris" />
     </div>
 
-    <div class="dana-number" id="danaNomor">0857 1234 5678</div>
+    <div class="dana-number" id="danaNomor">082264176976</div>
     <button class="copy-btn" onclick="copyDana()">📋 Salin Nomor</button>
     <div class="alert" id="copyAlert">Nomor berhasil disalin!</div>
 
     <div class="note">Silakan scan QR atau salin nomor untuk transfer</div>
   </div>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
-    // Loading screen timeout
+    // Loading screen
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('loading').style.display = 'none';
@@ -189,7 +206,53 @@
         }, 2000);
       });
     }
-  </script>
 
+    // ParticleJS config
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": { "enable": true, "value_area": 800 }
+        },
+        "color": { "value": "#00c3ff" },
+        "shape": { "type": "circle" },
+        "opacity": {
+          "value": 0.5,
+          "random": false
+        },
+        "size": {
+          "value": 4,
+          "random": true
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#00c3ff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 3,
+          "direction": "none",
+          "straight": false,
+          "out_mode": "bounce"
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 200, "line_linked": { "opacity": 0.6 }},
+          "push": { "particles_nb": 4 }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 </body>
 </html>
